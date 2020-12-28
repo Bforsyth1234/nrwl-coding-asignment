@@ -1,9 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>ticketDetails</ion-title>
+    <ion-title>Ticket Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <form [formGroup]="editTicketForm" ngxsForm="tickets.editTicketForm" (ngSubmit)="onSubmit()">
+    <ion-input type="number" formControlName="assigneeId" required placeholder="assigneeId"></ion-input>
+    <ion-checkbox type="number" formControlName="completed" required placeholder=""></ion-checkbox>
+    <ion-button type="submit" color="success" [disabled]="!editTicketForm.valid">Save</ion-button>
+  </form>
 </ion-content>

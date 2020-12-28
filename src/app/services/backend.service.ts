@@ -73,10 +73,9 @@ export class BackendService {
       assigneeId: null,
       completed: false
     };
-
     return of(newTicket).pipe(
       delay(randomDelay()),
-      tap((ticket: Ticket) => this.storedTickets.push(ticket))
+      tap((ticket: Ticket) => this.storedTickets = [...this.storedTickets, ...[newTicket]])
     );
   }
 

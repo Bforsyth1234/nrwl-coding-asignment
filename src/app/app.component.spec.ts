@@ -7,6 +7,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { BackendService } from './services/backend.service';
+import { NgxsModule, Store } from '@ngxs/store';
+import { TicketsState } from './state/tickets/tickets.state';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
 
@@ -14,6 +17,8 @@ describe('AppComponent', () => {
   let splashScreenSpy;
   let platformReadySpy;
   let platformSpy;
+  let store: Store;
+
 
   beforeEach(async(() => {
     statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
@@ -24,13 +29,16 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      imports: [ RouterTestingModule.withRoutes([]), NgxsModule.forRoot([TicketsState])],
       providers: [
         BackendService,
+        Store,
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
         { provide: Platform, useValue: platformSpy },
       ],
     }).compileComponents();
+    store = TestBed.inject(Store);
   }));
 
   it('should create the app', () => {

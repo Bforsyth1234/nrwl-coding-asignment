@@ -11,6 +11,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import { NgxsModule } from '@ngxs/store';
 import { TicketsState } from './state/tickets/tickets.state';
+import { BackendService } from './services/backend.service';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { NgxsFormPluginModule } from '@ngxs/form-plugin';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,11 +25,15 @@ import { TicketsState } from './state/tickets/tickets.state';
     AppRoutingModule,
     NgxsModule.forRoot([TicketsState], {
     developmentMode: !environment.production
-  })
+  }),
+  NgxsRouterPluginModule.forRoot(),
+  NgxsFormPluginModule.forRoot(),
+  NgxsReduxDevtoolsPluginModule.forRoot()
 ],
   providers: [
     StatusBar,
     SplashScreen,
+    BackendService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

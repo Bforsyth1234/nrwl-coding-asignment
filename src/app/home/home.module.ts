@@ -15,7 +15,6 @@ import { BackendService } from '../services/backend.service';
     IonicModule,
     HomePageRoutingModule
   ],
-  providers: [BackendService],
   declarations: [HomePage]
 })
 export class HomePageModule {}
