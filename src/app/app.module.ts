@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { NgxsModule } from '@ngxs/store';
 import { TicketsState } from './state/tickets/tickets.state';
 import { BackendService } from './services/backend.service';

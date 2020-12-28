@@ -1,4 +1,4 @@
-import { Ticket } from "src/app/services/backend.service";
+import { Ticket } from "../../services/backend.service";
 
 export class GetTickets {
   static readonly type = '[Tickets] Get Tickets';

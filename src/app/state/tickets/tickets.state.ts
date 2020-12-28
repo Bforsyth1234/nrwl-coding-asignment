@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
-import { BackendService, Ticket } from 'src/app/services/backend.service';
+import { BackendService, Ticket } from '../../services/backend.service';
 import { CreateNewTicket, EditTicketAssigneeId, GetTickets, SetSelectedTicket } from './tickets.actions';
 import produce from 'immer';
 

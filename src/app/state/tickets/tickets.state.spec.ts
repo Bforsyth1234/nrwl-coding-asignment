@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { TicketsState, TicketsStateModel } from './tickets.state';
 import { CreateNewTicket, GetTickets } from './tickets.actions';
-import { BackendService } from 'src/app/services/backend.service';
+import { BackendService } from '../../services/backend.service';
 
 
 describe('Tickets actions', () => {
