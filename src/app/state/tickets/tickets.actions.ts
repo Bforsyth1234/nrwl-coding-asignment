@@ -10,8 +10,8 @@ export class CreateNewTicket {
   constructor() { }
 }
 
-export class EditTicketAssigneeId {
-  static readonly type = '[Tickets] Edit Ticket';
+export class EditTicketAssignee {
+  static readonly type = '[Tickets] Edit Ticket Assignee';
   constructor() {}
 }
 
@@ -19,7 +19,12 @@ export class EditTicketCompleteStatus {
   static readonly type = '[Tickets] Edit Ticket Complete Status';
   constructor() {}
 }
+
 export class SetSelectedTicket {
   static readonly type = '[Tickets] Set Selected Ticket';
   constructor(public payload: Ticket) {}
+}
+
+export class SearchTickets {
+  static readonly type = '[Tickets] Search tickets';
 }

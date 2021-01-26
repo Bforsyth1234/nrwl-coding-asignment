@@ -5,7 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Ticket } from '../services/backend.service';
-import { CreateNewTicket, SetSelectedTicket } from '../state/tickets/tickets.actions';
+import { CreateNewTicket, SearchTickets, SetSelectedTicket } from '../state/tickets/tickets.actions';
 import { TicketsState } from '../state/tickets/tickets.state';
 
 @Component({
@@ -15,18 +15,25 @@ import { TicketsState } from '../state/tickets/tickets.state';
 })
 export class TicketsPage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
-  @Select(TicketsState.tickets) tickets$: Observable<Ticket[]>;
   public tickets: Ticket[];
   public newTicketForm = new FormGroup({
     ticketDescription: new FormControl([], Validators.required)
+  });
+  public searchForm = new FormGroup({
+    search: new FormControl([])
   });
 
   constructor(private store: Store) { }
 
   ngOnInit() {
-    this.tickets$
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(data => {
+    this.search();
+  }
+
+  public search() {
+    const searchParam: string = this.searchForm.value['search'];
+    this.store.select(TicketsState.filteredTickets(searchParam)).subscribe(data => {
+      console.log('data = ');
+      console.log(data);
       this.tickets = data;
     });
   }

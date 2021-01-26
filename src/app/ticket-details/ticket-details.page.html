@@ -5,9 +5,18 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="editTicketForm" ngxsForm="tickets.editTicketForm" (ngSubmit)="onSubmit()">
-    <ion-input type="number" formControlName="assigneeId" required placeholder="assigneeId"></ion-input>
-    <ion-checkbox type="number" formControlName="completed" required placeholder=""></ion-checkbox>
-    <ion-button type="submit" color="success" [disabled]="!editTicketForm.valid">Save</ion-button>
-  </form>
+  <ion-card>
+    <ion-card-header>
+      {{ ticket.description }}
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="editTicketForm" ngxsForm="tickets.editTicketForm" (ngSubmit)="onSubmit()">
+        <ion-label>Assignee Name:</ion-label>
+        <ion-input type="text" formControlName="name" required placeholder="name"></ion-input>
+        <ion-label>Complete:</ion-label>
+        <ion-checkbox type="number" formControlName="completed" placeholder=""></ion-checkbox>
+        <ion-button type="submit" color="success" [disabled]="!editTicketForm.valid">Save</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

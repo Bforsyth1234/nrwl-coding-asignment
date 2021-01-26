@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { delay, map, tap } from 'rxjs/operators';
 
 /**
  * This service acts as a mock back-end.
@@ -15,7 +15,7 @@ export type User = {
 export type Ticket = {
   id: number;
   description: string;
-  assigneeId: number;
+  assignedUser: User;
   completed: boolean;
 };
 
@@ -29,18 +29,24 @@ export class BackendService {
     {
       id: 0,
       description: 'Install a monitor arm',
-      assigneeId: 111,
+      assignedUser: {
+        id: 1111,
+        name: 'Victor'
+      },
       completed: false
     },
     {
       id: 1,
       description: 'Move the desk to the new location',
-      assigneeId: 111,
+      assignedUser: {
+        id: 1112,
+        name: 'Brooks'
+      },
       completed: false
     }
   ];
 
-  storedUsers: User[] = [{ id: 111, name: 'Victor' }];
+  storedUsers: User[] = [{ id: 111, name: 'Victor' }, { id: 112, name: 'Brooks' }];
 
   lastId = 1;
 
@@ -48,7 +54,7 @@ export class BackendService {
 
   private findTicketById = id =>
     this.storedTickets.find(ticket => ticket.id === +id);
-  private findUserById = id => this.storedUsers.find(user => user.id === +id);
+  private findUserByName = name => this.storedUsers.find(user => user.name === name);
 
   tickets() {
     return of(this.storedTickets).pipe(delay(randomDelay()));
@@ -63,14 +69,14 @@ export class BackendService {
   }
 
   user(id: number) {
-    return of(this.findUserById(id)).pipe(delay(randomDelay()));
+    return of(this.findUserByName(id)).pipe(delay(randomDelay()));
   }
 
   newTicket(payload: { description: string }) {
     const newTicket: Ticket = {
       id: ++this.lastId,
       description: payload.description,
-      assigneeId: null,
+      assignedUser: null,
       completed: false
     };
     return of(newTicket).pipe(
@@ -79,15 +85,14 @@ export class BackendService {
     );
   }
 
-  assign(ticketId: number, userId: number) {
+  assign(ticketId: number, userName: string) {
     const foundTicket = this.findTicketById(+ticketId);
-    const user = this.findUserById(+userId);
-
+    const user = this.findUserByName(userName);
     if (foundTicket && user) {
       return of(foundTicket).pipe(
         delay(randomDelay()),
-        tap((ticket: Ticket) => {
-          ticket.assigneeId = +userId;
+        map((ticket: Ticket) => {
+          return ticket = { ...ticket, assignedUser: user };
         })
       );
     }

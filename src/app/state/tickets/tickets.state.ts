@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { State, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { BackendService, Ticket } from '../../services/backend.service';
-import { CreateNewTicket, EditTicketAssigneeId, GetTickets, SetSelectedTicket } from './tickets.actions';
+import { CreateNewTicket, EditTicketAssignee, GetTickets, SetSelectedTicket } from './tickets.actions';
 import produce from 'immer';
 
 export interface TicketsStateModel {
@@ -19,6 +19,12 @@ export interface TicketsStateModel {
     dirty: boolean,
     status: string,
     errors: any
+  },
+  searchForm: {
+    model: any,
+    dirty: boolean,
+    status: string,
+    errors: any
   }
 }
 
@@ -27,7 +33,10 @@ const defaults = {
   selectedTicket: {
     id: 0,
     description: '',
-    assigneeId: 0,
+    user: {
+      userId: null,
+      name: ''
+    },
     completed: false
   },
   newTicketForm: {
@@ -46,13 +55,18 @@ const defaults = {
 
 @State<TicketsStateModel>({
   name: 'tickets',
-  defaults
 })
 @Injectable()
 export class TicketsState {
   @Selector()
   static tickets(state: TicketsStateModel): Ticket[] | null {
     return state.tickets;
+  }
+
+  static filteredTickets(searchParam: string) {
+    return createSelector([TicketsState.tickets], (state: Ticket[]) => {
+      return state.filter(ticket => ticket.description.includes(searchParam));
+    })
   }
 
   @Selector()
@@ -93,17 +107,20 @@ export class TicketsState {
     ctx.setState(draft);
   }
 
-  @Action(EditTicketAssigneeId)
-  editTicketAssigneeId(ctx: StateContext<TicketsStateModel>) {
+  @Action(EditTicketAssignee)
+  editTicketAssignee(ctx: StateContext<TicketsStateModel>) {
     const state = ctx.getState();
-    return this.backEndService.assign(state.selectedTicket.id, state.editTicketForm.model.assigneeId)
+    return this.backEndService.assign(state.selectedTicket.id, state.editTicketForm.model.name)
     .pipe(tap((result => {
-      console.log('result = ');
-      console.log(result);
-      // const draft = produce(ctx.getState(), draft => {
-      //   draft.tickets.push(result);
-      // });
-      // ctx.setState(draft);
+      const draft = produce(ctx.getState(), draft => {
+        draft.tickets = draft.tickets.map(ticket => {
+          if(ticket.id === result.id) {
+            ticket = result;
+          }
+          return ticket;
+        });
+      });
+      ctx.setState(draft);
     })))
   }
 

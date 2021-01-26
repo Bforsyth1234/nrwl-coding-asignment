@@ -5,7 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Ticket } from '../services/backend.service';
-import { EditTicketAssigneeId } from '../state/tickets/tickets.actions';
+import { EditTicketAssignee } from '../state/tickets/tickets.actions';
 import { TicketsState } from '../state/tickets/tickets.state';
 
 @Component({
@@ -17,9 +17,10 @@ export class TicketDetailsPage implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   @Select(TicketsState.selectedTicket) ticket$: Observable<Ticket>;
   public editTicketForm = new FormGroup({
-    assigneeId: new FormControl([], Validators.required),
+    name: new FormControl([], Validators.required),
     completed: new FormControl([], Validators.required)
   });
+  public ticket: Ticket;
 
 
   constructor(private store: Store) { }
@@ -28,13 +29,14 @@ export class TicketDetailsPage implements OnInit, OnDestroy {
     this.ticket$
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe(ticket => {
-      this.editTicketForm.patchValue({assigneeId: ticket.assigneeId});
+      this.ticket = ticket;
+      this.editTicketForm.patchValue({name: ticket.assignedUser.name});
       this.editTicketForm.patchValue({completed: ticket.completed});
     })
   }
 
   onSubmit() {
-    this.store.dispatch(new EditTicketAssigneeId());
+    this.store.dispatch(new EditTicketAssignee());
     this.store.dispatch(new Navigate(['/tickets']));
   }
 

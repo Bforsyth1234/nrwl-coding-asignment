@@ -23,10 +23,12 @@
       <ion-label>
         Search Tickets
       </ion-label>
-      <ion-searchbar></ion-searchbar>
+      <form [formGroup]="searchForm" ngxsForm="tickets.searchForm">
+        <ion-searchbar (ionBlur)="search()" formControlName="search"></ion-searchbar>
+      </form>
     </ion-card-content>
   </ion-card>
-  <ion-card *ngIf="!tickets.length">
+  <ion-card *ngIf="!tickets">
     <ion-card-header>
       <ion-card-title>
         <h2>
@@ -56,7 +58,7 @@
     </ion-card-header>
     <ion-card-content>
       <p>
-        Assigned: {{ticket.assigneeId}}
+        Assigned: {{ticket.assignedUser.name}}
       </p>
       <p>
         Ticket Number: {{ticket.id}}
